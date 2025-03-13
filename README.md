@@ -1,26 +1,24 @@
-11. **Coverage Population ID Assignment:**  
-    - Parse `referenceData` and locate the `derivedFields` array.  
-    - Search for an object where `derivedField` = "coveragePopulation".  
-    - If found, check `coTypes` inside that object:  
-        - If `MD` is present in `coTypes`, set `MD_CoveragePopulationID` to blank.  
-        - If `DN` is present in `coTypes`, set `DN_CoveragePopulationID` to blank.  
-        - If `VS` is present in `coTypes`, set `VS_CoveragePopulationID` to blank.  
-    - If `derivedField` = "coveragePopulation" is not found OR `coTypes` does not contain the relevant type:  
-        - Assign a random value from `planData.coveragePopulations` where `coverageOptionType` matches the respective category (`MD`, `DN`, `VS`).  
-    - Ensure all members of the same family share the same `CoveragePopulationID`.  
-    - Spouse and child cannot have any value that the subscriber does not.  
-    - `CoveragePopulationID` is mandatory for all individuals if no derived field is found.
-   
+.append("11. **Coverage Population ID Assignment:**\n")
+                .append("   11.1 Read `referenceData.derivedFields`. This is an **array of objects**, where each object has a `derivedField` key.\n")
+                .append("   11.2 Search for an object where key `derivedField` has value 'coveragePopulation'.\n")
+                .append("   11.3 If found, check `coTypes` inside that object, where `coTypes` is an **array of strings:\n")
+                .append("       - If MD value is present in coTypes array, set `MD_CoveragePopulationID` as blank.\n")
+                .append("       - If DN value is present in coTypes array, set `DN_CoveragePopulationID` as blank.\n")
+                .append("       - If VS value is present in coTypes array, set `VS_CoveragePopulationID` as blank.\n")
+                .append("   11.4 If key derivedField and value coveragePopulation is not found OR coTypes does not contain the relevant type:\n")
+                .append("       - Assign a random value from planData.coveragePopulations where coverageOptionType matches the respective category (MD, DN, VS).\n")
+                .append("   11.5 Ensure all members of the same family share the same Coverage Population ID.\n")
+                .append("   11.6 Spouse and child cannot have any value that the subscriber does not.\n")
+//                .append("   11.7 `CoveragePopulationID` is mandatory for all individuals if no derived field is found.\n\n")
 
-12. **Bill Group Reference Assignment:**  
-    - Parse `referenceData` and locate the `derivedFields` array.  
-    - Search for an object where `derivedField` = "billGroup".  
-    - If found, check `coTypes` inside that object:  
-        - If `MD` is present in `coTypes`, set `MD_BillGroupReferenceID` to blank.  
-        - If `DN` is present in `coTypes`, set `DN_BillGroupReferenceID` to blank.  
-        - If `VS` is present in `coTypes`, set `VS_BillGroupReferenceID` to blank.  
-    - If `derivedField` = "billGroup" is not found OR `coTypes` does not contain the relevant type:  
-        - Assign a random value from `planData.billGroups` where `coverageOptionType` matches the respective category (`MD`, `DN`, `VS`).  
-    - Ensure all members of the same family share the same `BillGroupReferenceID`.  
-    - Spouse and child cannot have any value that the subscriber does not.  
-    - `BillGroupReferenceID` is mandatory for all individuals if no derived field is found.  
+                .append("12. **Bill Group Reference Assignment:**\n")
+                .append("   12.1 Read `referenceData.derivedFields`. This is an **array of objects**, where each object has a `derivedField` key.\n")
+                .append("   12.2 Search for an object where key `derivedField` has value 'coveragePopulation'.\n")
+                .append("   12.3 If found, check `coTypes` inside that object, where `coTypes` is an **array of strings:\n")
+                .append("       - If MD value is present in coTypes array, set `MD_BillGroupReferenceID` as blank.\n")
+                .append("       - If DN value is present in coTypes array, set `DN_BillGroupReferenceID` as blank.\n")
+                .append("       - If VS value is present in coTypes array, set `VS_BillGroupReferenceID` as blank.\n")
+                .append("   12.4 If key derivedField and value billGroup is not found OR coTypes does not contain the relevant type:\n")
+                .append("       - Assign a random value from planData.billGroups where coverageOptionType matches the respective category (MD, DN, VS).\n")
+                .append("   12.5 Ensure all members of the same family share the same BillGroupReferenceID.\n")
+                .append("   12.6 Spouse and child cannot have any value that the subscriber does not.\n")
