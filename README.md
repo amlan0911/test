@@ -273,3 +273,102 @@ public String getInstructions() {
     }
 
 
+
+
+
+public String getInstructions() {
+    StringBuilder instructionsCsv = new StringBuilder();
+    instructionsCsv.append("### **Instructions for Generating Synthetic Data**\n\n")
+
+    // 1. Fetch Members
+    .append("1. **Fetch Members:**\n")
+    .append("   1.1 Extract the requested number of members from the user query.\n")
+    .append("   1.2 Each member represents a family.\n")
+    .append("   1.3 Each family consists of 1 to 3 individuals.\n\n")
+
+    // 2. Individual Representation
+    .append("2. **Individual Representation:**\n")
+    .append("   2.1 Each row represents an individual belonging to a family.\n")
+    .append("   2.2 Assign the `memberGroupID` from the user query to each individual.\n\n")
+
+    // 3. Unique ID Generation
+    .append("3. **Generate Unique IDs:**\n")
+    .append("   3.1 Generate a unique 9-digit `affiliationExternalID` for each family.\n")
+    .append("   3.2 The number of unique `affiliationExternalID`s must match the number of requested members before proceeding.\n\n")
+
+    // 4. Family Composition
+    .append("4. **Family Composition:**\n")
+    .append("   4.1 Each family must contain exactly **one subscriber**.\n")
+    .append("   4.2 A family **may** have one spouse and one child, but not more.\n\n")
+
+    // 5. Relationship Codes
+    .append("5. **Assign Relationship Codes:**\n")
+    .append("   - `18` for the **subscriber** (always present).\n")
+    .append("   - `01` for the **spouse** (optional).\n")
+    .append("   - `19` for the **child** (optional).\n\n")
+
+    // 6. Employment Details
+    .append("6. **Employment Details:**\n")
+    .append("   6.1 Set `employBeginDate` as **01/01/2025** only for subscribers (`relationshipCode=18`), leave blank for others.\n")
+    .append("   6.2 Set `employStatusCode` as **'A'** only for subscribers.\n\n")
+
+    // 7. Validation
+    .append("7. **Validation & Correction:**\n")
+    .append("   7.1 Ensure the total number of `affiliationExternalID`s matches the requested families.\n")
+    .append("   7.2 If validation fails, correct discrepancies before returning the CSV.\n\n")
+
+    // 8. Contact Details
+    .append("8. **Assign Contact Details:**\n")
+    .append("   8.1 Generate `firstName` and `lastName` (use any valid names).\n")
+    .append("   8.2 Generate `birthDate`, ensuring it does not exceed **150 years from today**.\n")
+    .append("   8.3 Assign `gender`: Randomly choose from **'M', 'F', or 'U'**.\n")
+    .append("   8.4 Set `addressType` to **'HOM'**.\n")
+    .append("   8.5 Assign `address1`: Use a valid **USA address**.\n")
+    .append("   8.6 Ensure `city`, `state`, and `postalCode` form a valid combination.\n")
+    .append("   8.7 Set `country` to **'US'**.\n")
+    .append("   8.8 Set `communicationType` to **'EML'**.\n")
+    .append("   8.9 Generate `communicationText` as an email in **firstname_lastname@test.com** format.\n")
+    .append("   8.10 Set `externalIDType` to **'0F'**.\n\n")
+
+    // 9. Benefit Details
+    .append("9. **Benefit Details:**\n")
+    .append("   9.1 Use `benefitEffectiveDate` from `referenceData`.\n")
+    .append("   9.2 Set `qualifyingEvent` to **'28'**.\n")
+    .append("   9.3 Set `qualifyingEventDate` to the `benefitEffectiveDate` from `referenceData`.\n\n")
+
+    // 10. Coverage Option Assignment
+    .append("10. **Coverage Data Assignment:**\n")
+    .append("   10.1 **MD_CoverageOptionID**: Extract `bundleOptionID` where `coverageOptionType='MD'` from `referenceData.planData`. If not found, leave blank.\n")
+    .append("   10.2 **DN_CoverageOptionID**: Extract `bundleOptionID` where `coverageOptionType='DN'` from `referenceData.planData`. If not found, leave blank.\n")
+    .append("   10.3 **VS_CoverageOptionID**: Extract `bundleOptionID` where `coverageOptionType='VS'` from `referenceData.planData`. If not found, leave blank.\n\n")
+
+    // 11. Coverage Population ID Assignment (No Mix-Matching)
+    .append("11. **Coverage Population ID Assignment:**\n")
+    .append("   11.1 **Ensure correct assignment** of CoveragePopulationIDs:\n")
+    .append("       - `MD_coveragePopulationID` should not be mixed with `DN_coveragePopulationID` or `VS_coveragePopulationID`.\n")
+    .append("       - `DN_coveragePopulationID` should not be mixed with `MD_coveragePopulationID` or `VS_coveragePopulationID`.\n")
+    .append("       - `VS_coveragePopulationID` should not be mixed with `MD_coveragePopulationID` or `DN_coveragePopulationID`.\n")
+    .append("   11.2 If `derivedFields.coveragePopulation` exists, set the corresponding `CoveragePopulationID` to **NULL**.\n")
+    .append("   11.3 If not, randomize from `planData.coveragePopulations`.\n")
+    .append("   11.4 Ensure all members of the same family share the same `CoveragePopulationID`.\n")
+    .append("   11.5 Spouse/child **cannot** have values that the subscriber lacks.\n\n")
+
+    // 12. Bill Group Reference Assignment (No Mix-Matching)
+    .append("12. **Bill Group Reference Assignment:**\n")
+    .append("   12.1 **Ensure correct assignment** of BillGroupReferenceIDs:\n")
+    .append("       - `MD_BillGroupReferenceID` should not be mixed with `DN_BillGroupReferenceID` or `VS_BillGroupReferenceID`.\n")
+    .append("       - `DN_BillGroupReferenceID` should not be mixed with `MD_BillGroupReferenceID` or `VS_BillGroupReferenceID`.\n")
+    .append("       - `VS_BillGroupReferenceID` should not be mixed with `MD_BillGroupReferenceID` or `DN_BillGroupReferenceID`.\n")
+    .append("   12.2 If `derivedFields.billGroup` exists, set `BillGroupReferenceID` to **NULL**.\n")
+    .append("   12.3 If not, randomize from `planData.billGroups`.\n")
+    .append("   12.4 Ensure all members of the same family have the same `BillGroupReferenceID`.\n")
+    .append("   12.5 Spouse/child **cannot** have values that the subscriber lacks.\n\n")
+
+    // Example
+    .append("### **User Query Example:**\n")
+    .append("- **'Enroll 10 members'** should result in **10 families** with valid relationships and unique IDs.\n");
+
+    return instructionsCsv.toString();
+}
+
+
