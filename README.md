@@ -82,3 +82,108 @@
                 .append("       - Spouse/child cannot have values that the subscriber lacks.\n")
                 .append("       - Ensure correct mapping: `MD` data should only be used for `MD_BillGroupReferenceID`, `DN` for `DN_BillGroupReferenceID`, and `VS` for `VS_BillGroupReferenceID`.\n")
                 .append("       - If no matching object is found for a coverage type, set the value to blank.\n\n")
+
+
+
+
+
+    public String getReferenceData() {
+        StringBuilder referenceData = new StringBuilder();
+        referenceData.append("'''     \"   \\\"derivedFields\\\":[\\n\" +\n" +
+                                "                        \"      {\\n\" +\n" +
+                                "                        \"         \\\"derivedField\\\":\\\"coveragePopulation\\\",\\n\" +\n" +
+                                "                        \"         \\\"derivedEffectiveDate\\\":\\\"\\\",\\n\" +\n" +
+                                "                        \"         \\\"derivedExpirationDate\\\":\\\"\\\",\\n\" +\n" +
+                                "                        \"         \\\"coTypes\\\":['MD','DN','VS']\\n\" +\n" +
+                                "                        \"      },\\n\" +\n" +
+                                "                        \"      {\\n\" +\n" +
+                                "                        \"         \\\"derivedField\\\":\\\"billGroup\\\",\\n\" +\n" +
+                                "                        \"         \\\"derivedEffectiveDate\\\":\\\"\\\",\\n\" +\n" +
+                                "                        \"         \\\"derivedExpirationDate\\\":\\\"\\\",\\n\" +\n" +
+                                "                        \"         \\\"coTypes\\\":['MD','DN','VS']\\n\" +\n" +
+                                "                        \"         ]\\n\" +\n" +
+                                "                        \"      }\\n\" +\n" +
+                                "                        \"   ]\\n\" +{\n" +
+
+                        "   \"memGroupID\":\"1318990\",\n" +
+                        "   \"shouldSupply\":{\n" +
+                        "      \"benefitEffectiveDate\":\"01/01/2025\",\n" +
+                        "      \"employBeginDate\":\"01/01/2025\",\n" +
+                        "      \"benefitStatus\":\"A\",\n" +
+                        "      \"planData\":[\n" +
+                        "         {\n" +
+                        "            \"bundleOptionID\":\"12349\",\n" +
+                        "            \"coverageOptionType\":\"MD\",\n" +
+                        "            \"billGroups\":[\n" +
+                        "               \"11\",\n" +
+                        "               \"22\"\n" +
+                        "            ],\n" +
+                        "            \"ediEnrollmentIDs\":[\n" +
+                        "               \"SG01CLO1\",\n" +
+                        "               \"SG01CL02\",\n" +
+                        "               \"SG02CL01\",\n" +
+                        "               \"SG02CL02\"\n" +
+                        "            ],\n" +
+                        "            \"coveragePopulations\":[\n" +
+                        "               \"1111\",\n" +
+                        "               \"2222\"\n" +
+                        "            ],\n" +
+                        "            \"customAttributes\":[\n" +
+                        "               {\n" +
+                        "                  \"customAttributeName\":\"Location\",\n" +
+                        "                  \"customAttributesValues\":[\n" +
+                        "                     \"MN\",\n" +
+                        "                     \"BOS\"\n" +
+                        "                  ]\n" +
+                        "               },\n" +
+                        "               {\n" +
+                        "                  \"customAttributeName\":\"CovType\",\n" +
+                        "                  \"customAttributesValues\":[\n" +
+                        "                     \"ACT\",\n" +
+                        "                     \"COB\"\n" +
+                        "                  ]\n" +
+                        "               }\n" +
+                        "            ]\n" +
+                        "         },\n" +
+                        "         {\n" +
+                        "            \"bundleOptionID\":\"56789\",\n" +
+                        "            \"coverageOptionType\":\"DN\",\n" +
+                        "            \"billGroups\":[\n" +
+                        "               \"33\",\n" +
+                        "               \"44\"\n" +
+                        "            ],\n" +
+                        "            \"ediEnrollmentIDs\":[\n" +
+                        "               \"SG03CLO1\",\n" +
+                        "               \"SG03CL02\",\n" +
+                        "               \"SG04CLO1\",\n" +
+                        "               \"SG04CL02\"\n" +
+                        "            ],\n" +
+                        "            \"coveragePopulations\":[\n" +
+                        "               \"4444\",\n" +
+                        "               \"5555\"\n" +
+                        "            ],\n" +
+                        "            \"customAttributes\":[\n" +
+                        "               {\n" +
+                        "                  \"customAttributeName\":\"Location\",\n" +
+                        "                  \"customAttributesValues\":[\n" +
+                        "                     \"NY\",\n" +
+                        "                     \"NJ\"\n" +
+                        "                  ]\n" +
+                        "               },\n" +
+                        "               {\n" +
+                        "                  \"customAttributeName\":\"CovType\",\n" +
+                        "                  \"customAttributesValues\":[\n" +
+                        "                     \"ACT\",\n" +
+                        "                     \"COB\"\n" +
+                        "                  ]\n" +
+                        "               }\n" +
+                        "            ]\n" +
+                        "         }\n" +
+                        "      ]\n" +
+                        "   },\n"
+                        )
+                .append(" '''")
+                .append("\n");
+        return referenceData.toString();
+    }
+
