@@ -1,41 +1,332 @@
-.append("10. **Coverage Data Assignment:**\n")
-.append("   10.1 **MD_CoverageOptionID**: Extract `bundleOptionID` where `coverageOptionType='MD'` from `referenceData.planData`. If not found, then explicitly set `MD_CoverageOptionID = \"NULL\"` (do not assign any value).\n")
-.append("   10.2 **DN_CoverageOptionID**: Extract `bundleOptionID` where `coverageOptionType='DN'` from `referenceData.planData`. If not found, then explicitly set `DN_CoverageOptionID = \"NULL\"` (do not assign any value).\n")
-.append("   10.3 **VS_CoverageOptionID**: Extract `bundleOptionID` where `coverageOptionType='VS'` from `referenceData.planData`. If not found, then explicitly set `VS_CoverageOptionID = \"NULL\"` (do not assign any value).\n\n")
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.uhc.ei.reportit</groupId>
+	<artifactId>Report-It</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>Report It Web</name>
 
-.append("11. **Coverage Population ID Assignment:**\n")
-.append("   11.1 **CRITICAL Rule 1**: If any CoverageOptionID (MD_CoverageOptionID, DN_CoverageOptionID, VS_CoverageOptionID) is \"NULL\", then its corresponding CoveragePopulationID MUST also be set to \"NULL\" with no exceptions.\n")
-.append("   11.2 Read `referenceData.derivedFields`. This is an **array of objects**, where each object has a `derivedField` key.\n")
-.append("   11.3 Search for an object where `derivedField = \"coveragePopulation\"`.\n")
-.append("   11.4 **CRITICAL Rule 2**: If an object with `derivedField = \"coveragePopulation\"` is found:\n")
-.append("      - Extract the `coTypes` array from that object.\n")
-.append("      - If `coTypes` contains `MD`, then ALWAYS set `MD_CoveragePopulationID = \"NULL\"` with no exceptions.\n")
-.append("      - If `coTypes` contains `DN`, then ALWAYS set `DN_CoveragePopulationID = \"NULL\"` with no exceptions.\n")
-.append("      - If `coTypes` contains `VS`, then ALWAYS set `VS_CoveragePopulationID = \"NULL\"` with no exceptions.\n")
-.append("   11.5 **Only if BOTH Rule 1 and Rule 2 do not apply for a particular coverage type**:\n")
-.append("      - Assign a random value from `planData.coveragePopulations` where `coverageOptionType` matches (MD, DN, VS).\n")
-.append("   11.6 Ensure all members of the same family share the same Coverage Population ID.\n")
-.append("   11.7 Spouse and child cannot have any value that the subscriber does not.\n")
-.append("   11.8 Double-check that Rules 1 and 2 were properly applied before proceeding.\n\n")
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.5</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>3.2.5</version>
+			<exclusions>
+				<exclusion>
+				    <groupId>org.springframework.boot</groupId>
+				    <artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents.client5</groupId>
+			<artifactId>httpclient5</artifactId>
+			<version>5.2.1</version>
+		</dependency>
+	<dependency>
+		<groupId>org.json</groupId>
+		<artifactId>json</artifactId>
+		<version>20231013</version>
+	</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-resolver-dns-native-macos</artifactId>
+			<version>4.1.108.Final</version>
+			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-handler</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-common</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-handler</artifactId>
+			<version>4.1.118.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-common</artifactId>
+			<version>4.1.118.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>9.4.0.jre8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>6.1.12</version>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.jtds</groupId>
+			<artifactId>jtds</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.servlet.jsp.jstl</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+<!--			<version>11.0.2</version>-->
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.12.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-models</artifactId>
+			<version>1.5.20</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.xmlunit</groupId>
+					<artifactId>xmlunit-cor</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>net.minidev</groupId>
+					<artifactId>json-smart</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.minidev</groupId>
+			<artifactId>json-smart</artifactId>
+			<version>2.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.xmlunit</groupId>
+			<artifactId>xmlunit-core</artifactId>
+			<version>2.10.0</version>
+			<scope>test</scope>
+		</dependency>
 
-.append("12. **Bill Group Reference Assignment:**\n")
-.append("   12.1 **CRITICAL Rule 1**: If any CoverageOptionID (MD_CoverageOptionID, DN_CoverageOptionID, VS_CoverageOptionID) is \"NULL\", then its corresponding BillGroupReferenceID MUST also be set to \"NULL\" with no exceptions.\n")
-.append("   12.2 Read `referenceData.derivedFields`. This is an **array of objects**, where each object has a `derivedField` key.\n")
-.append("   12.3 Search for an object where `derivedField = \"billGroup\"`.\n")
-.append("   12.4 **CRITICAL Rule 2**: If an object with `derivedField = \"billGroup\"` is found:\n")
-.append("      - Extract the `coTypes` array from that object.\n")
-.append("      - If `coTypes` contains `MD`, then ALWAYS set `MD_BillGroupReferenceID = \"NULL\"` with no exceptions.\n")
-.append("      - If `coTypes` contains `DN`, then ALWAYS set `DN_BillGroupReferenceID = \"NULL\"` with no exceptions.\n")
-.append("      - If `coTypes` contains `VS`, then ALWAYS set `VS_BillGroupReferenceID = \"NULL\"` with no exceptions.\n")
-.append("   12.5 **Only if BOTH Rule 1 and Rule 2 do not apply for a particular coverage type**:\n")
-.append("      - Assign a random value from `planData.billGroups` where `coverageOptionType` matches (MD, DN, VS).\n")
-.append("   12.6 Ensure all members of the same family share the same BillGroupReferenceID.\n")
-.append("   12.7 Spouse and child cannot have any value that the subscriber does not.\n")
-.append("   12.8 Double-check that Rules 1 and 2 were properly applied before proceeding.\n\n")
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+			<version>3.2.6</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-webflux</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webflux</artifactId>
+			<version>6.1.14</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.persistence</groupId>
+			<artifactId>jakarta.persistence-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>6.1.14</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-context</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>6.1.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot</artifactId>
+			<version>3.2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>6.2.8</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.security</groupId>
+					<artifactId>spring-security-crypto</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+			<version>6.3.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.14</version>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-models</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>10.1.36</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents.core5</groupId>
+			<artifactId>httpcore5</artifactId>
+			<version>5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.activation</groupId>
+			<artifactId>jakarta.activation-api</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.activation</groupId>
+			<artifactId>jakarta.activation</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.ulisesbocchio</groupId>
+			<artifactId>jasypt-spring-boot-starter</artifactId>
+			<version>3.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>5.2.3</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.commons</groupId>
+					<artifactId>commons-compress</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.14.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>1.26.0</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>Report-It</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<forceJavacCompilerUse>true</forceJavacCompilerUse>
+					<compilerArgs>
+						<arg>-verbose</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
-.append("13. **Final Validation:**\n")
-.append("   13.1 Before returning any data, perform a final check on ALL rows to verify:\n")
-.append("      - If any CoverageOptionID is \"NULL\", its corresponding CoveragePopulationID and BillGroupReferenceID must be \"NULL\".\n")
-.append("      - If a coverage type is in coTypes for coveragePopulation, its CoveragePopulationID must be \"NULL\".\n")
-.append("      - If a coverage type is in coTypes for billGroup, its BillGroupReferenceID must be \"NULL\".\n")
-.append("   13.2 If any of these rules are violated, correct the data before proceeding.\n\n")
+</project>
